@@ -1,25 +1,43 @@
 import React, {Component} from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Link } from 'react-router-dom';
 
 class PostNew extends Component {
 
     renderField(field){
+        
+        const {meta : {touched, error} } = field;
+        const className = `form-group ${touched && error ? 'has-danger' : ''}` ;
+        
         return (
-            <div className='form-group'>
+            <div className={className}>
                 <label>{field.label}</label>
                 <input
                     type="text"
                     className='form-control'
-                    //map toutes les propriété de field.input à toutes les propriété de l'input
+                    //map toutes les propriété de field.input à toutes les propriété de l'input 
                     {...field.input}
                 />
+                <div className="text-help">
+                    {// récupère l'erreur depuis la méthode validate en focntion du name du composant
+                        touched ? error : ''}
+                </div>
             </div>
         );
     }
 
+    onSubmit(values){
+       // console.log(values);
+    }
+
     render() {
+
+        const { handleSubmit } = this.props;
+
+
+
         return (
-            <form>
+            <form onSubmit={handleSubmit( this.onSubmit.bind(this) )}>
                 <Field 
                     label="Title"
                     name="title"
@@ -35,6 +53,10 @@ class PostNew extends Component {
                     name="content"
                     component={this.renderField}
                 />
+                <button type="submit" className="btn btn-primary">Submit</button>
+                <Link className="btn btn-danger" to="/">
+                       Cancel
+                </Link>
             </form>
         );
     }
@@ -48,14 +70,16 @@ function validate(values) {
     const errors = {};
 
     // validate the inputs from 'values'
-    if(!values.title || values.title.lenght<3){
+    if(!values.title || values.title.length < 3){
+        // errors.???? doit être identique au name du composant auquel l'erreur se raporte.
+        // de cette manière le composant en erreur est automatiquement récupéré
         errors.title = "Enter a title that is at least 3 characters!";
     }
-    if(!values.categoris){
-        errors.title = "Enter some categories";
+    if(!values.categories){
+        errors.categories = "Enter some categories";
     }
     if(!values.content){
-        errors.title = "Enter some content";
+        errors.content = "Enter some content";
     }
 
     return errors;
