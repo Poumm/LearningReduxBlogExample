@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { createPost } from '../actions';
+
 
 class PostNew extends Component {
 
@@ -27,7 +31,10 @@ class PostNew extends Component {
     }
 
     onSubmit(values){
-       // console.log(values);
+        // console.log(values);
+        this.props.createPost(values, () => {
+            this.props.history.push('/');
+        });
     }
 
     render() {
@@ -85,9 +92,18 @@ function validate(values) {
     return errors;
 }
 
+/*
+version avec uniquement le reduxform sans la connection
 export default reduxForm({
     //validate: validate
     validate,
     //donne un id unique au form au cas où on voudrait en afficher plusieur
     form : 'PostNewForm'
-})(PostNew);
+})(PostNew);*/
+
+export default reduxForm({
+    validate,
+    form : 'PostNewForm'
+})(
+    connect(null,{ createPost })(PostNew)
+);
