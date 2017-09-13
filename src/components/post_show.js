@@ -49,7 +49,7 @@ class PostShow extends Component {
 }
 
 function mapStateToProps( {posts}, ownProps) {
-    console.log(posts);
+    //console.log(posts);
     if(!posts){
         return {state : null};
     } 
